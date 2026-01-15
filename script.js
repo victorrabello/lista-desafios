@@ -1,6 +1,8 @@
 const input = document.getElementById('desafio-input');
 const btnAdd = document.getElementById('btn-adicionar');
 const lista = document.getElementById('lista-desafios');
+const porcentagem = document.getElementById('porcentagem');
+const barraProgresso = document.getElementById('barra-preenchimento');
 
 let desafios = JSON.parse(localStorage.getItem('listaDesafios')) || [];
 renderizarLista();
@@ -27,6 +29,7 @@ function renderizarLista() {
     </div>`;
 
     lista.appendChild(novoCard);
+    atualizarProgresso();
   });
 }
 
@@ -66,3 +69,21 @@ btnAdd.addEventListener('click', () => {
   }
   input.value = ''; //Limpa o input após adicionar
 });
+
+function atualizarProgresso() {
+  const total = desafios.length;
+  const concluidos = desafios.filter((item) => item.concluido).length;
+  const porcentagemConcluida =
+    total === 0 ? 0 : Math.round((concluidos / total) * 100);
+  porcentagem.textContent = `${porcentagemConcluida}%`;
+  barraProgresso.style.width = `${porcentagemConcluida}%`;
+
+  if (porcentagemConcluida === 100 && total > 0) {
+    barraProgresso.style.background = 'var(--success)'; // A barra fica verde
+    barraProgresso.style.boxShadow = '0 0 15px var(--success)';
+  } else {
+    barraProgresso.style.background =
+      'linear-gradient(90deg, var(--primary), #a34ec4)';
+    barraProgresso.style.boxShadow = '0 0 10px var(--primary)';
+  }
+}

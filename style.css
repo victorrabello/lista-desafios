@@ -131,3 +131,37 @@ input:focus {
     transform: translateY(0);
   }
 }
+
+.progresso-container {
+  background: var(--card-dark);
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(117, 49, 133, 0.2);
+  margin: 20px;
+}
+
+.progresso-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--text-muted);
+}
+
+.barra-fundo {
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  overflow: hidden; /* Garante que o preenchimento não saia das bordas */
+}
+
+#barra-preenchimento {
+  width: 0%; /* Começa em 0 */
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), #a34ec4);
+  box-shadow: 0 0 10px var(--primary); /* Efeito neon */
+  transition: width 0.5s ease; /* Animação suave quando a porcentagem mudar */
+}
