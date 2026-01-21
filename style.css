@@ -165,3 +165,26 @@ input:focus {
   box-shadow: 0 0 10px var(--primary); /* Efeito neon */
   transition: width 0.5s ease; /* Animação suave quando a porcentagem mudar */
 }
+
+.acoes-lista {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.btn-secundario {
+  background: transparent;
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
+  padding: 5px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.3s;
+}
+
+.btn-secundario:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: rgba(231, 76, 60, 0.1);
+}
