@@ -6,21 +6,42 @@ const barraProgresso = document.getElementById('barra-preenchimento');
 const btnLimpar = document.getElementById('btn-limpar');
 
 let desafios = JSON.parse(localStorage.getItem('listaDesafios')) || [];
+let filtroAtual = 'todos';
+
 renderizarLista();
 
+function mudarFiltro(novofiltro, elementoBotao) {
+  filtroAtual = novofiltro;
+
+  document
+    .querySelectorAll('.btn-filtro')
+    .forEach((btn) => btn.classList.remove('ativo'));
+
+  elementoBotao.classList.add('ativo');
+
+  renderizarLista();
+}
+
 function renderizarLista() {
-  lista.innerHTML = ''; // Limpa a lista antes de renderizar
+  let listaFiltrada = desafios;
+
+  if (filtroAtual === 'pendentes')
+    listaFiltrada = desafios.filter((d) => !d.concluido);
+  if (filtroAtual === 'concluidos')
+    listaFiltrada = desafios.filter((d) => d.concluido);
 
   const temConcluidos = desafios.some((item) => item.concluido);
   btnLimpar.style.display = temConcluidos ? 'block' : 'none';
 
-  if (desafios.length === 0) {
-    lista.innerHTML =
-      '<p style="text-align:center; opacity:0.5;">Nenhum desafio por aqui... ainda! 🚀</p>';
+  if (listaFiltrada.length === 0) {
+    mostrarMensagemVazia();
+    atualizarProgresso();
     return;
   }
 
-  desafios.forEach((item) => {
+  lista.innerHTML = ''; // Limpa a lista antes de renderizar
+
+  listaFiltrada.forEach((item) => {
     const novoCard = document.createElement('div');
     novoCard.classList.add('card-desafio');
     if (item.concluido) novoCard.classList.add('concluido');
@@ -37,13 +58,47 @@ function renderizarLista() {
   atualizarProgresso();
 }
 
+function mostrarMensagemVazia() {
+  let mensagem = '';
+  let icone = '';
+
+  if (filtroAtual === 'todos') {
+    mensagem = 'Nenhum desafio por aqui... ainda! 🚀';
+    icone = '🎯';
+  } else if (filtroAtual === 'pendentes') {
+    mensagem = 'Incrível! Você não tem nada pendente. ☕';
+    icone = '✅';
+  } else {
+    mensagem = 'Você ainda não completou nenhum desafio. Vamos lá! 💪';
+    icone = '⏳';
+  }
+
+  lista.innerHTML = `
+    <div class="empty-state">
+      <div class="empty-icon">${icone}</div>
+      <p>${mensagem}</p>
+    </div>
+  `;
+}
+
 function alternarConcluido(id) {
   desafios = desafios.map((item) => {
     if (item.id === id) {
+      // Verificamos se ele vai ser concluído AGORA (estava false e vai virar true)
+      if (!item.concluido) {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#753185', '#a34ec4', '#ffffff'],
+        });
+      }
+      // Retornamos o item invertido
       return { ...item, concluido: !item.concluido };
     }
     return item;
   });
+
   salvarNoLocalStorage();
   renderizarLista();
 }
